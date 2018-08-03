@@ -5,6 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Reflection;
 
@@ -15,6 +16,17 @@ namespace GeekBurger.Ui.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "GeekBurger UI Service",
+                        Version = "v1",
+                        Description = "API REST para consumo do serviço UI",
+                    });
+            });
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -32,6 +44,8 @@ namespace GeekBurger.Ui.Api
             }
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(l=> l.SwaggerEndpoint("/swagger/v1/swagger.json", "UI"));
         }
 
         protected virtual IContainer InitializeContainer(ContainerBuilder builder, params IModule[] modules)
