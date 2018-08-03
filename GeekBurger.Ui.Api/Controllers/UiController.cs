@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GeekBurger.Ui.Domain.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-namespace GeekBurger_UI.Controllers
+namespace GeekBurger.Ui.Api.Controllers
 {
-    [Route("api/[controller]")]
-    public class ValuesController : Controller
+    [Route("api/ui")]
+    public class UiController : Controller
     {
+        private readonly IOrderService _orderService;
+        private readonly IStoreCatalogService _storeCatalogService;
+        private readonly IUserService _userService;
+
+        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IUserService userService)
+        {
+            this._orderService = orderService;
+            this._storeCatalogService = storeCatalogService;
+            this._userService = userService;
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()

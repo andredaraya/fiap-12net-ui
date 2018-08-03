@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeekBurger.Ui.Application\GeekBurger.Ui.Application.csproj" />
+    <ProjectReference Include="..\GeekBurger.Ui.Domain\GeekBurger.Ui.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,71 @@
+﻿using Autofac;
+using Autofac.Builder;
+using Autofac.Core;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
+
+namespace GeekBurger.Ui.Api
+{
+    public class Startup
+    {
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+
+            var appContainer = InitializeContainer(builder);
+
+            return appContainer.Resolve<IServiceProvider>();
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseMvc();
+        }
+
+        protected virtual IContainer InitializeContainer(ContainerBuilder builder, params IModule[] modules)
+        {
+            var crossCuttingAssembly = typeof(CrossCutting.UiModule).GetTypeInfo().Assembly;
+            var options = new InitializeOptions(new[] { crossCuttingAssembly }, modules, ContainerBuildOptions.None);
+
+            return InitializeContainer(options, builder);
+        }
+
+        public static IContainer InitializeContainer(InitializeOptions options, ContainerBuilder builder)
+        {
+            if (!(options.AssembliesToScan == null || options.AssembliesToScan.Length <= 0))
+                builder.RegisterAssemblyModules(options.AssembliesToScan);
+
+            if (!(options.Modules == null || options.Modules.Length <= 0))
+                foreach (var module in options.Modules)
+                    builder.RegisterModule(module);
+
+            return builder.Build(options.BuildOptions);
+        }
+    }
+
+    public class InitializeOptions
+    {
+        public Assembly[] AssembliesToScan { get; private set; }
+        public IModule[] Modules { get; private set; }
+        public ContainerBuildOptions BuildOptions { get; private set; }
+
+        public InitializeOptions(Assembly[] collection, IModule[] modules, ContainerBuildOptions buildOptions)
+        {
+            this.AssembliesToScan = collection;
+            this.Modules = modules;
+            this.BuildOptions = buildOptions;
+        }
+    }
+}
