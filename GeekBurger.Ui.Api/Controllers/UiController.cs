@@ -26,6 +26,9 @@ namespace GeekBurger.Ui.Api.Controllers
             this._storeCatalogService = storeCatalogService;
             this._userService = userService;
             this._options = options.Value;
+
+            this.SubscribeStoreCatalog();
+
             //if not ready, id is null
             STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }
@@ -77,5 +80,12 @@ namespace GeekBurger.Ui.Api.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, string.Format("Error trying to post order: {0}", ex.Message));
             }
         }
+
+        #region [Private Methods]
+        private void SubscribeStoreCatalog()
+        {
+
+        }
+        #endregion
     }
 }
