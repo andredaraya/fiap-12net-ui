@@ -1,10 +1,8 @@
-﻿using GeekBurger.Ui.Application.Options;
-using GeekBurger.Ui.Contracts.Messages;
+﻿using GeekBurger.Ui.Contracts.Messages;
 using GeekBurger.Ui.Contracts.Request;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,10 +27,11 @@ namespace GeekBurger.Ui.Api.Controllers
             this._serviceBus = serviceBus;
 
             this.SubscribeStoreCatalog();
+
             this._serviceBus.AddToMessageList(new ShowWelcomePageMessage(), "ShowWelcomePage");
             this._serviceBus.SendMessagesAsync();
             //if not ready, id is null
-            //STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
+            STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }
 
         [HttpPost]

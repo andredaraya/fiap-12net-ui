@@ -3,6 +3,6 @@
     public interface IUIServiceBus
     {
         void AddToMessageList<T>(T messageObject, string label);
-        void SendMessagesAsync();
+        void SendMessagesAsync(string topic = null);
     }
 }

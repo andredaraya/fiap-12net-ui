@@ -16,7 +16,7 @@ namespace GeekBurger.Ui.Application.ServiceBus
     public class UIServiceBus : IUIServiceBus
     {
         private readonly ServiceBusOptions _configuration;
-        private const string Topic = "UICommand";
+        private const string DefaultTopic = "UICommand";
         private List<Message> _messages;
         private Task _lastTask;
         private IServiceBusNamespace _namespace;
@@ -29,10 +29,12 @@ namespace GeekBurger.Ui.Application.ServiceBus
             EnsureTopicIsCreated();
         }
 
-        public void EnsureTopicIsCreated()
+        public void EnsureTopicIsCreated(string topicToCreate = null)
         {
-            if (!_namespace.Topics.List().Any(topic => topic.Name.Equals(Topic, StringComparison.InvariantCultureIgnoreCase)))
-                _namespace.Topics.Define(Topic).WithSizeInMB(1024).Create();
+            var teste = _namespace.Topics.List();
+            if (!_namespace.Topics.List().Any(topic => topic.Name.Equals(string.IsNullOrEmpty(topicToCreate) ? DefaultTopic : topicToCreate, 
+                                                                        StringComparison.InvariantCultureIgnoreCase)))
+                _namespace.Topics.Define(DefaultTopic).WithSizeInMB(1024).Create();
         }
 
         public void AddToMessageList<T>(T messageObject, string label)
@@ -53,12 +55,15 @@ namespace GeekBurger.Ui.Application.ServiceBus
             };
         }
 
-        public async void SendMessagesAsync()
+        public async void SendMessagesAsync(string topic = null)
         {
             if (_lastTask != null && !_lastTask.IsCompleted)
                 return;
 
-            var topicClient = new TopicClient(_configuration.ConnectionString, Topic);
+            if (!string.IsNullOrEmpty(topic))
+                EnsureTopicIsCreated(topic);
+
+            var topicClient = new TopicClient(_configuration.ConnectionString, string.IsNullOrEmpty(topic) ? DefaultTopic : topic);
 
             _lastTask = SendAsync(topicClient);
 

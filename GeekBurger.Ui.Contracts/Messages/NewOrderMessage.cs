@@ -11,7 +11,7 @@ namespace GeekBurger.Ui.Contracts.Messages
         }
 
         public int OrderId { get; set; }
-        public string Total { get; set; }
+        public decimal Total { get; set; }
         public List<ProductMessage> Products { get; set; }
         public List<int> ProductionIds { get; set; }
     }
