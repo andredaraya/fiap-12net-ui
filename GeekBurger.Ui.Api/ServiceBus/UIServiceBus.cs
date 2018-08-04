@@ -34,25 +34,21 @@ namespace GeekBurger.Ui.Api.ServiceBus
                 _namespace.Topics.Define(Topic).WithSizeInMB(1024).Create();
         }
 
-        public void AddToMessageList(IEnumerable<EntityEntry<Product>> changes)
+        public void AddToMessageList<T>(T messageObject, string label)
         {
-            _messages.AddRange(changes
-            .Where(entity => entity.State != EntityState.Detached
-                    && entity.State != EntityState.Unchanged)
-            .Select(GetMessage).ToList());
+            _messages.Add(GetMessage(messageObject, label));
         }
 
-        public Message GetMessage(EntityEntry<Product> entity)
+        public Message GetMessage<T>(T entity, string label)
         {
-            var productChanged = Mapper.Map<ProductChangedMessage>(entity);
-            var productChangedSerialized = JsonConvert.SerializeObject(productChanged);
-            var productChangedByteArray = Encoding.UTF8.GetBytes(productChangedSerialized);
+            var entitySerialized = JsonConvert.SerializeObject(entity);
+            var entityByteArray = Encoding.UTF8.GetBytes(entitySerialized);
 
             return new Message
             {
-                Body = productChangedByteArray,
+                Body = entityByteArray,
                 MessageId = Guid.NewGuid().ToString(),
-                Label = productChanged.Product.StoreId.ToString()
+                Label = label
             };
         }
 
