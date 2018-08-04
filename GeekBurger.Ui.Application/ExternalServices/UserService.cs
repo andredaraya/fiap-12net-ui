@@ -19,13 +19,14 @@ namespace GeekBurger.Ui.Application.ExternalServices
             this._options = options;
         }
 
-        public virtual async Task<bool> PostUser(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<bool> PostUser(byte[] face, CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = false;
             try
             {
-                var serviceResult = await _options.PostUser.WithHeader("Cache-Control", "no-cache")
-                                                .PostJsonAsync("", cancellationToken);
+                var serviceResult = await _options.PostUser
+                                                    .WithHeader("Cache-Control", "no-cache")
+                                                    .PostJsonAsync(face, cancellationToken);
 
                 response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
             }

@@ -11,6 +11,8 @@ namespace GeekBurger.Ui.Api.Controllers
     [Route("api/")]
     public class UiController : Controller
     {
+        private Guid? STORE_ID;
+
         private readonly IOrderService _orderService;
         private readonly IStoreCatalogService _storeCatalogService;
         private readonly IUserService _userService;
@@ -20,16 +22,19 @@ namespace GeekBurger.Ui.Api.Controllers
             this._orderService = orderService;
             this._storeCatalogService = storeCatalogService;
             this._userService = userService;
+            
+            //if not ready, id is null
+            STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }
 
         [HttpPost]
         [Route("face")]
-        public async Task<IActionResult> PostFace([FromBody]string value, CancellationToken cancellationToken)
+        public async Task<IActionResult> PostFace([FromBody]PostFaceRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                await this._userService.PostUser();
-                return Ok("Face under process");
+                await this._userService.PostUser(request.Face);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -56,11 +61,11 @@ namespace GeekBurger.Ui.Api.Controllers
 
         [HttpPost]
         [Route("order")]
-        public async Task<IActionResult> PostOrder([FromBody]string value, CancellationToken cancellationToken)
+        public async Task<IActionResult> PostOrder([FromBody]CreateOrderRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                await this._orderService.CreateOrder();
+                var result = await this._orderService.CreateOrder();
                 return Ok("Order posted");
             }
             catch (Exception ex)

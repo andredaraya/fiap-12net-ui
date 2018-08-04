@@ -7,7 +7,7 @@ namespace GeekBurger.Ui.Domain.Interface
 {
     public interface IUserService
     {
-        Task<bool> PostUser(CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> PostUser(byte[] face, CancellationToken cancellationToken = default(CancellationToken));
         Task<FoodRestrictionsResponse> PostFoodRestrictions(FoodRestrictionsRequest request, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

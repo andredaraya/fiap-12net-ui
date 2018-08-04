@@ -1,6 +1,8 @@
 ﻿using Flurl.Http;
 using GeekBurger.Ui.Application.Options;
 using GeekBurger.Ui.Domain.Interface;
+using GeekBurger.Ui.Domain.Request;
+using GeekBurger.Ui.Domain.Response;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
@@ -17,35 +19,38 @@ namespace GeekBurger.Ui.Application.ExternalServices
             this._options = options;
         }
 
-        public virtual async Task<bool> GetStoreCatalog(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<Guid?> GetStoreCatalog(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = false;
+            var response = new GetStoreCatalogResponse();
             try
             {
                 var serviceResult = await _options.GetStoreCatalog.WithHeader("Cache-Control", "no-cache")
                                                  .SetQueryParam("")
                                                 .GetAsync(cancellationToken);
 
-                response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
+                response = JsonConvert.DeserializeObject<GetStoreCatalogResponse>(serviceResult.Content.ReadAsStringAsync().Result);
+
+                if (response.Ready)
+                    return response.StoreId;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            return response;
+            return null;
         }
 
-        public virtual async Task<bool> GetProducts(CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<GetProductsResponse> GetProducts(GetProductsRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = false;
+            var response = new GetProductsResponse();
             try
             {
                 var serviceResult = await _options.GetProducts.WithHeader("Cache-Control", "no-cache")
-                                                 .SetQueryParam("")
+                                                 .SetQueryParams(request)
                                                  .GetAsync(cancellationToken);
 
-                response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
+                response = JsonConvert.DeserializeObject<GetProductsResponse>(serviceResult.Content.ReadAsStringAsync().Result);
             }
             catch (Exception ex)
             {
