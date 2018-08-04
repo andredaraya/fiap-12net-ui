@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="GeekBurger.Orders.Contract" Version="2.0.0" />
+    <PackageReference Include="GeekBurger.StoreCatalog.Contract" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="1.4.0" />
     <PackageReference Include="Microsoft.Azure.Management.ServiceBus.Fluent" Version="1.13.0" />

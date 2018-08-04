@@ -4,6 +4,7 @@ using GeekBurger.Ui.Domain.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using GeekBurger.Orders.Contract;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
