@@ -1,7 +1,9 @@
-﻿using GeekBurger.Ui.Contracts.Request;
+﻿using GeekBurger.Ui.Application.Options;
+using GeekBurger.Ui.Contracts.Request;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,13 +18,14 @@ namespace GeekBurger.Ui.Api.Controllers
         private readonly IOrderService _orderService;
         private readonly IStoreCatalogService _storeCatalogService;
         private readonly IUserService _userService;
+        private readonly ServiceBusOptions _options;
 
-        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IUserService userService)
+        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IUserService userService, IOptions<ServiceBusOptions> options)
         {
             this._orderService = orderService;
             this._storeCatalogService = storeCatalogService;
             this._userService = userService;
-            
+            this._options = options.Value;
             //if not ready, id is null
             STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }

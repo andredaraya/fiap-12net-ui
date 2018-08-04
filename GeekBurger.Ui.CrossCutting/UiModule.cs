@@ -49,7 +49,7 @@ namespace GeekBurger.Ui.CrossCutting
             builder.Register(type => new UserService(type.Resolve<UserOptions>()))
                 .As<IUserService>()
                 .SingleInstance()
-                .AutoActivate(); 
+                .AutoActivate();
             #endregion
         }
     }

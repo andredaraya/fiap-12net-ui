@@ -2,8 +2,10 @@
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+using GeekBurger.Ui.Application.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -13,6 +15,13 @@ namespace GeekBurger.Ui.Api
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; set; }
+
+        public Startup(IConfiguration Configuration)
+        {
+            this._configuration = Configuration;
+        }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -27,7 +36,7 @@ namespace GeekBurger.Ui.Api
                         Description = "API REST para consumo do serviço UI",
                     });
             });
-
+            services.Configure<ServiceBusOptions>(_configuration.GetSection("ServiceBus"));
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
