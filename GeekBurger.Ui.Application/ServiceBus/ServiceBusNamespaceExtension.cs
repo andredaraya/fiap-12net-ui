@@ -2,7 +2,7 @@
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ServiceBus.Fluent;
 
-namespace GeekBurger.Ui.Api.ServiceBus
+namespace GeekBurger.Ui.Application.ServiceBus
 {
     public static class ServiceBusNamespaceExtension
     {

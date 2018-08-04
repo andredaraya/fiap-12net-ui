@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using GeekBurger.Ui.Application.ExternalServices;
 using GeekBurger.Ui.Application.Options;
+using GeekBurger.Ui.Application.ServiceBus;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace GeekBurger.Ui.CrossCutting
 {
@@ -48,6 +50,13 @@ namespace GeekBurger.Ui.CrossCutting
 
             builder.Register(type => new UserService(type.Resolve<UserOptions>()))
                 .As<IUserService>()
+                .SingleInstance()
+                .AutoActivate();
+            #endregion
+
+            #region [Service Bus]
+            builder.Register(type => new UIServiceBus(type.Resolve<IOptions<ServiceBusOptions>>()))
+                .As<IUIServiceBus>()
                 .SingleInstance()
                 .AutoActivate();
             #endregion

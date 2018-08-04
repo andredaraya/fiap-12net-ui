@@ -1,4 +1,5 @@
 ﻿using GeekBurger.Ui.Application.Options;
+using GeekBurger.Ui.Domain.Interface;
 using Microsoft.Azure.Management.ServiceBus.Fluent;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Options;
@@ -10,9 +11,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GeekBurger.Ui.Api.ServiceBus
+namespace GeekBurger.Ui.Application.ServiceBus
 {
-    public class UIServiceBus
+    public class UIServiceBus : IUIServiceBus
     {
         private readonly ServiceBusOptions _configuration;
         private const string Topic = "UICommand";
