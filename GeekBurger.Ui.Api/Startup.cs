@@ -3,6 +3,8 @@ using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using GeekBurger.Ui.Application.Options;
+using GeekBurger.Ui.Application.ServiceBus;
+using GeekBurger.Ui.Application.ServiceBus.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,10 +39,14 @@ namespace GeekBurger.Ui.Api
                     });
             });
             services.Configure<ServiceBusOptions>(_configuration.GetSection("ServiceBus"));
+            services.AddSignalR();
+            services.AddSingleton<IReceiveMessagesFactory, ReceiveMessagesFactory>();
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
             var appContainer = InitializeContainer(builder);
+
+           
 
             return appContainer.Resolve<IServiceProvider>();
         }
@@ -55,6 +61,13 @@ namespace GeekBurger.Ui.Api
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(l=> l.SwaggerEndpoint("/swagger/v1/swagger.json", "UI"));
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessageHub>("/messagehub");
+            });
+
+            app.ApplicationServices.GetService<IReceiveMessagesFactory>();
         }
 
         protected virtual IContainer InitializeContainer(ContainerBuilder builder, params IModule[] modules)
