@@ -9,4 +9,8 @@
     <Folder Include="Request\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GeekBurger.Ui.Contracts\GeekBurger.Ui.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

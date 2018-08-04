@@ -17,26 +17,16 @@ namespace GeekBurger.Ui.Application.ExternalServices
             this._options = options;
         }
 
-        public virtual async Task<bool> GetStoreCatalog()
+        public virtual async Task<bool> GetStoreCatalog(CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = false;
             try
             {
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
-                tokenSource.CancelAfter(3000);
-
                 var serviceResult = await _options.GetStoreCatalog.WithHeader("Cache-Control", "no-cache")
                                                  .SetQueryParam("")
-                                                .GetAsync(tokenSource.Token);
+                                                .GetAsync(cancellationToken);
 
                 response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
-            }
-            catch (FlurlHttpException ex)
-            {
-                if (ex.InnerException is TaskCanceledException)
-                {
-
-                }
             }
             catch (Exception ex)
             {
@@ -46,26 +36,16 @@ namespace GeekBurger.Ui.Application.ExternalServices
             return response;
         }
 
-        public virtual async Task<bool> GetProducts()
+        public virtual async Task<bool> GetProducts(CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = false;
             try
             {
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
-                tokenSource.CancelAfter(3000);
-
                 var serviceResult = await _options.GetProducts.WithHeader("Cache-Control", "no-cache")
                                                  .SetQueryParam("")
-                                                 .GetAsync(tokenSource.Token);
+                                                 .GetAsync(cancellationToken);
 
                 response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
-            }
-            catch (FlurlHttpException ex)
-            {
-                if (ex.InnerException is TaskCanceledException)
-                {
-
-                }
             }
             catch (Exception ex)
             {

@@ -1,5 +1,7 @@
 ﻿using Flurl.Http;
 using GeekBurger.Ui.Application.Options;
+using GeekBurger.Ui.Contracts.Request;
+using GeekBurger.Ui.Contracts.Response;
 using GeekBurger.Ui.Domain.Interface;
 using Newtonsoft.Json;
 using System;
@@ -17,25 +19,15 @@ namespace GeekBurger.Ui.Application.ExternalServices
             this._options = options;
         }
 
-        public virtual async Task<bool> PostUser()
+        public virtual async Task<bool> PostUser(CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = false;
             try
             {
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
-                tokenSource.CancelAfter(3000);
-
                 var serviceResult = await _options.PostUser.WithHeader("Cache-Control", "no-cache")
-                                                .PostJsonAsync("", tokenSource.Token);
+                                                .PostJsonAsync("", cancellationToken);
 
                 response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
-            }
-            catch (FlurlHttpException ex)
-            {
-                if (ex.InnerException is TaskCanceledException)
-                {
-
-                }
             }
             catch (Exception ex)
             {
@@ -45,25 +37,16 @@ namespace GeekBurger.Ui.Application.ExternalServices
             return response;
         }
 
-        public virtual async Task<bool> PostFoodRestrictions()
+        public virtual async Task<FoodRestrictionsResponse> PostFoodRestrictions(FoodRestrictionsRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = false;
+            var response = new FoodRestrictionsResponse();
             try
             {
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
-                tokenSource.CancelAfter(3000);
+                var serviceResult = await _options.PostFoodRestrictions
+                                                    .WithHeader("Cache-Control", "no-cache")
+                                                    .PostJsonAsync(request, cancellationToken);
 
-                var serviceResult = await _options.PostFoodRestrictions.WithHeader("Cache-Control", "no-cache")
-                                                .PostJsonAsync("", tokenSource.Token);
-
-                response = JsonConvert.DeserializeObject<bool>(serviceResult.Content.ReadAsStringAsync().Result);
-            }
-            catch (FlurlHttpException ex)
-            {
-                if (ex.InnerException is TaskCanceledException)
-                {
-
-                }
+                response = JsonConvert.DeserializeObject<FoodRestrictionsResponse>(serviceResult.Content.ReadAsStringAsync().Result);
             }
             catch (Exception ex)
             {

@@ -1,10 +1,14 @@
-﻿using GeekBurger.Ui.Domain.Interface;
+﻿using GeekBurger.Ui.Contracts.Request;
+using GeekBurger.Ui.Domain.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GeekBurger.Ui.Api.Controllers
 {
-    [Route("api/ui")]
+    [Route("api/")]
     public class UiController : Controller
     {
         private readonly IOrderService _orderService;
@@ -18,36 +22,52 @@ namespace GeekBurger.Ui.Api.Controllers
             this._userService = userService;
         }
 
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("face")]
+        public async Task<IActionResult> PostFace([FromBody]string value, CancellationToken cancellationToken)
         {
+            try
+            {
+                await this._userService.PostUser();
+                return Ok("Face under process");
+            }
+            catch (Exception ex)
+            {
+                //log
+                return StatusCode(StatusCodes.Status400BadRequest, string.Format("Error trying to post face: {0}", ex.Message));
+            }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPost]
+        [Route("foodRestrictions")]
+        public async Task<IActionResult> PostFoodRestrictions([FromBody]FoodRestrictionsRequest request, CancellationToken cancellationToken)
         {
+            try
+            {
+                var result = await this._userService.PostFoodRestrictions(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                //log
+                return StatusCode(StatusCodes.Status400BadRequest, string.Format("Error trying to post food restrictions: {0}", ex.Message));
+            }
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost]
+        [Route("order")]
+        public async Task<IActionResult> PostOrder([FromBody]string value, CancellationToken cancellationToken)
         {
+            try
+            {
+                await this._orderService.CreateOrder();
+                return Ok("Order posted");
+            }
+            catch (Exception ex)
+            {
+                //log
+                return StatusCode(StatusCodes.Status400BadRequest, string.Format("Error trying to post order: {0}", ex.Message));
+            }
         }
     }
 }
