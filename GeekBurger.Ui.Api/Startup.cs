@@ -38,15 +38,16 @@ namespace GeekBurger.Ui.Api
                         Description = "API REST para consumo do serviço UI",
                     });
             });
+
             services.Configure<ServiceBusOptions>(_configuration.GetSection("ServiceBus"));
-            services.AddSignalR();
-            services.AddSingleton<IReceiveMessagesFactory, ReceiveMessagesFactory>();
+
+            //TO DO: trocar por fabrica.
+            services.AddSingleton<IUserRetrievedReceiveMessageService, UserRetrievedReceiveMessageService>();
+            services.AddSingleton<IStoreCatalogReceiveMessageService, StoreCatalogReceiveMessageService>();
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
             var appContainer = InitializeContainer(builder);
-
-           
 
             return appContainer.Resolve<IServiceProvider>();
         }
@@ -60,14 +61,7 @@ namespace GeekBurger.Ui.Api
 
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(l=> l.SwaggerEndpoint("/swagger/v1/swagger.json", "UI"));
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<MessageHub>("/messagehub");
-            });
-
-            app.ApplicationServices.GetService<IReceiveMessagesFactory>();
+            app.UseSwaggerUI(l => l.SwaggerEndpoint("/swagger/v1/swagger.json", "UI"));
         }
 
         protected virtual IContainer InitializeContainer(ContainerBuilder builder, params IModule[] modules)

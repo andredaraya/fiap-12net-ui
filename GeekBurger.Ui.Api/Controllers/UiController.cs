@@ -1,4 +1,5 @@
-﻿using GeekBurger.Ui.Contracts.Messages;
+﻿using GeekBurger.Ui.Application.ServiceBus;
+using GeekBurger.Ui.Contracts.Messages;
 using GeekBurger.Ui.Contracts.Request;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.AspNetCore.Http;
@@ -16,20 +17,20 @@ namespace GeekBurger.Ui.Api.Controllers
 
         private readonly IOrderService _orderService;
         private readonly IStoreCatalogService _storeCatalogService;
+        private readonly IStoreCatalogReceiveMessageService _storeCatalogReceiveMessageService;
         private readonly IUserService _userService;
         private readonly IUIServiceBus _serviceBus;
 
-        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IUserService userService, IUIServiceBus serviceBus)
+        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IStoreCatalogReceiveMessageService storeCatalogReceiveMessageService, IUserService userService, IUIServiceBus serviceBus)
         {
             this._orderService = orderService;
             this._storeCatalogService = storeCatalogService;
+            this._storeCatalogReceiveMessageService = storeCatalogReceiveMessageService;
             this._userService = userService;
             this._serviceBus = serviceBus;
 
             this.SubscribeStoreCatalog();
-
-            this._serviceBus.AddToMessageList(new ShowWelcomePageMessage(), "ShowWelcomePage");
-            this._serviceBus.SendMessagesAsync();
+            
             //if not ready, id is null
             STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }
@@ -85,7 +86,7 @@ namespace GeekBurger.Ui.Api.Controllers
         #region [Private Methods]
         private void SubscribeStoreCatalog()
         {
-
+            //TO DO: Implementar fabrica de subscricao.
         }
         #endregion
     }

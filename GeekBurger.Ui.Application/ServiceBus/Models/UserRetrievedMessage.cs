@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GeekBurger.Ui.Application.ServiceBus.Models
+﻿namespace GeekBurger.Ui.Application.ServiceBus.Models
 {
     public class UserRetrievedMessage
     {
