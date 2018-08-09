@@ -29,6 +29,7 @@ namespace GeekBurger.Ui.Api.Controllers
             this._userService = userService;
             this._serviceBus = serviceBus;
 
+            //Subscribe to StoreCatalog
             this.SubscribeStoreCatalog();
             
             //if not ready, id is null
@@ -73,6 +74,7 @@ namespace GeekBurger.Ui.Api.Controllers
         {
             try
             {
+                //Order must be createad on ServiceBus, not API
                 var result = await this._orderService.CreateOrder();
                 return Ok("Order posted");
             }
