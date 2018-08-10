@@ -42,6 +42,7 @@ namespace GeekBurger.Ui.Api
             services.Configure<ServiceBusOptions>(_configuration.GetSection("ServiceBus"));
 
             //TO DO: trocar por fabrica.
+            services.AddLogging();
             services.AddSingleton<IUserRetrievedReceiveMessageService, UserRetrievedReceiveMessageService>();
             services.AddSingleton<IStoreCatalogReceiveMessageService, StoreCatalogReceiveMessageService>() ;
             var builder = new ContainerBuilder();
@@ -59,6 +60,7 @@ namespace GeekBurger.Ui.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(l => l.SwaggerEndpoint("/swagger/v1/swagger.json", "UI"));

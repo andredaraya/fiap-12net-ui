@@ -14,18 +14,16 @@ namespace GeekBurger.Ui.Api.Controllers
     public class UiController : Controller
     {
         private readonly IOrderService _orderService;
-        private readonly IStoreCatalogReceiveMessageService _storeCatalogReceiveMessageService;
         private readonly IUserRetrievedReceiveMessageService _userRetrievedReceiveMessageService;
         private readonly IUserService _userService;
         private readonly IUIServiceBus _serviceBus;
 
-        public UiController(IOrderService orderService, IUserService userService, IUIServiceBus serviceBus)
+        public UiController(IOrderService orderService, IUserService userService, IUIServiceBus serviceBus, IUserRetrievedReceiveMessageService userRetrievedReceiveMessageService)
         {
             this._orderService = orderService;
             this._userService = userService;
             this._serviceBus = serviceBus;
-            //this._storeCatalogReceiveMessageService = storeCatalogReceiveMessageService;
-            //this._userRetrievedReceiveMessageService = userRetrievedReceiveMessageService;
+            this._userRetrievedReceiveMessageService = userRetrievedReceiveMessageService;
         }
 
         [HttpPost]

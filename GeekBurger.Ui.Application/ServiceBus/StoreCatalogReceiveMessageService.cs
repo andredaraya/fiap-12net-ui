@@ -1,5 +1,6 @@
 ﻿using GeekBurger.Ui.Application.Options;
 using GeekBurger.Ui.Application.ServiceBus.Models;
+using GeekBurger.Ui.Contracts.Messages;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
@@ -57,7 +58,8 @@ namespace GeekBurger.Ui.Application.ServiceBus
             base.EnsureSubscriptionsIsCreated();
 
             //if not ready, id is null
-            STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
+            if (this._storeCatalogService != null)
+                STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
         }
 
         public Guid GetStoreId()

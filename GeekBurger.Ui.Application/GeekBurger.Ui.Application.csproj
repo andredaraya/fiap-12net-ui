@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeekBurger.Ui.Contracts\GeekBurger.Ui.Contracts.csproj" />
     <ProjectReference Include="..\GeekBurger.Ui.Domain\GeekBurger.Ui.Domain.csproj" />
   </ItemGroup>
 

@@ -4,6 +4,7 @@ using GeekBurger.Ui.Application.Options;
 using GeekBurger.Ui.Application.ServiceBus;
 using GeekBurger.Ui.Domain.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GeekBurger.Ui.CrossCutting
@@ -60,6 +61,16 @@ namespace GeekBurger.Ui.CrossCutting
                 .SingleInstance()
                 .AutoActivate();
             #endregion
+
+            builder.Register(type => new UserRetrievedReceiveMessageService(type.Resolve<IOptions<ServiceBusOptions>>(), type.Resolve<ILogger<UserRetrievedReceiveMessageService>>(), type.Resolve<IUIServiceBus>(), type.Resolve<IStoreCatalogService>()))
+              .As<IUserRetrievedReceiveMessageService>()
+              .SingleInstance()
+              .AutoActivate();
+
+            builder.Register(type => new StoreCatalogReceiveMessageService(type.Resolve<IOptions<ServiceBusOptions>>(), type.Resolve<IStoreCatalogService>(), type.Resolve<ILogger<StoreCatalogReceiveMessageService>>(), type.Resolve<IUIServiceBus>()))
+              .As<IStoreCatalogReceiveMessageService>()
+              .SingleInstance()
+              .AutoActivate();
         }
     }
 }

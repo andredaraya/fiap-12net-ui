@@ -8,13 +8,13 @@ namespace GeekBurger.Ui.Contracts.Messages
         public NewOrderMessage()
         {
             this.Products = new List<ProductMessage>();
-            this.ProductionIds = new List<int>();
+            this.ProductionIds = new List<Guid>();
         }
 
         public Guid OrderId { get; set; }
         public decimal Total { get; set; }
         public List<ProductMessage> Products { get; set; }
-        public List<int> ProductionIds { get; set; }
+        public List<Guid> ProductionIds { get; set; }
     }
 
     public class ProductMessage

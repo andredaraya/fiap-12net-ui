@@ -1,6 +1,8 @@
 ﻿using GeekBurger.Ui.Application.Options;
 using GeekBurger.Ui.Application.ServiceBus.Models;
+using GeekBurger.Ui.Contracts.Messages;
 using GeekBurger.Ui.Domain.Interface;
+using GeekBurger.Ui.Domain.Request;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,21 +17,17 @@ namespace GeekBurger.Ui.Application.ServiceBus
     public class UserRetrievedReceiveMessageService : ReceiveMessagesService, IUserRetrievedReceiveMessageService
     {
         private readonly IUIServiceBus _serviceBus;
-        private readonly IOptions<ServiceBusOptions> _serviceBusOptions;
-        private readonly ILogger _logger;
+        private readonly IStoreCatalogService _storeCatalogService;
 
-        public override string _subscription { get; set; }
-        public override string _topic { get; set; }
+        public override string _subscription { get; set; } = "UI";
+        public override string _topic { get; set; } = "UserRetrieved";
         public Guid RequesterId { get; set; }
 
-        public UserRetrievedReceiveMessageService(IOptions<ServiceBusOptions> serviceBusOptions, ILogger logger, IUIServiceBus serviceBus)
+        public UserRetrievedReceiveMessageService(IOptions<ServiceBusOptions> serviceBusOptions, ILogger logger, IUIServiceBus serviceBus, IStoreCatalogService storeCatalogService)
             : base(serviceBusOptions, logger)
         {
             _serviceBus = serviceBus;
-            _serviceBusOptions = serviceBusOptions;
-            _logger = logger;
-
-            RequesterId = Guid.NewGuid();
+            _storeCatalogService = storeCatalogService;
         }
 
         public override Task Handle(Message message, CancellationToken arg2)
@@ -43,11 +41,19 @@ namespace GeekBurger.Ui.Application.ServiceBus
 
             if (userRetrieved.AreRestrictionsSet)
             {
-                
+                GetProductsRequest request = new GetProductsRequest()
+                {
+                    StoreName = "Bla bla bla"
+                };
+
+                var response = _storeCatalogService.GetProducts(request).Result;
+
+                _serviceBus.AddToMessageList(new ShowProductsListMessage() { Products = response.ConvertToMessageProduct(response.Products, this.RequesterId) }, "ShowProductsList");
+                _serviceBus.SendMessagesAsync();
             }
             else
             {
-                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = RequesterId  }, "ShowWelcomePage");
+                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = this.RequesterId }, "ShowWelcomePage");
                 _serviceBus.SendMessagesAsync();
             }
 
