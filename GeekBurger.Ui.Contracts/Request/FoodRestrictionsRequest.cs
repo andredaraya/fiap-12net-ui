@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Contracts.Request
 {
@@ -11,7 +12,7 @@ namespace GeekBurger.Ui.Contracts.Request
 
         public List<string> Restrictions { get; set; }
         public string Others { get; set; }
-        public int UserId { get; set; }
-        public int RequesterId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid RequesterId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Domain.Response
 {
@@ -19,8 +20,8 @@ namespace GeekBurger.Ui.Domain.Response
             this.Items = new List<Item>();
         }
 
-        public int StoreId { get; set; }
-        public int ProductId { get; set; }
+        public Guid StoreId { get; set; }
+        public Guid ProductId { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
         public List<Item> Items { get; set; }
@@ -29,7 +30,7 @@ namespace GeekBurger.Ui.Domain.Response
 
     public class Item
     {
-        public int ItemId { get; set; }
+        public Guid ItemId { get; set; }
         public string Name { get; set; }
     }
 }

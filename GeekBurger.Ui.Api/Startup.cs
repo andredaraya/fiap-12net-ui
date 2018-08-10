@@ -42,8 +42,8 @@ namespace GeekBurger.Ui.Api
             services.Configure<ServiceBusOptions>(_configuration.GetSection("ServiceBus"));
 
             //TO DO: trocar por fabrica.
-            services.AddSingleton<IUserRetrievedReceiveMessageService, UserRetrievedReceiveMessageService>();
-            services.AddSingleton<IStoreCatalogReceiveMessageService, StoreCatalogReceiveMessageService>();
+            services.AddScoped<IUserRetrievedReceiveMessageService, UserRetrievedReceiveMessageService>();
+            services.AddSingleton<IStoreCatalogReceiveMessageService, StoreCatalogReceiveMessageService>() ;
             var builder = new ContainerBuilder();
             builder.Populate(services);
 

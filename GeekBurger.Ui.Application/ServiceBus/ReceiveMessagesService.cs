@@ -34,7 +34,7 @@ namespace GeekBurger.Ui.Application.ServiceBus
                 _namespace.Topics.Define(_topic).WithSizeInMB(1024).Create();
         }
 
-        public void EnsureSubscriptionsIsCreated()
+        public virtual void EnsureSubscriptionsIsCreated()
         {
             var topic = _namespace.Topics.GetByName(_topic);
 

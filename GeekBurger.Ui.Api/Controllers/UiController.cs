@@ -13,26 +13,19 @@ namespace GeekBurger.Ui.Api.Controllers
     [Route("api/")]
     public class UiController : Controller
     {
-        private Guid? STORE_ID;
-
         private readonly IOrderService _orderService;
-        private readonly IStoreCatalogService _storeCatalogService;
         private readonly IStoreCatalogReceiveMessageService _storeCatalogReceiveMessageService;
+        private readonly IUserRetrievedReceiveMessageService _userRetrievedReceiveMessageService;
         private readonly IUserService _userService;
         private readonly IUIServiceBus _serviceBus;
 
-        public UiController(IOrderService orderService, IStoreCatalogService storeCatalogService, IStoreCatalogReceiveMessageService storeCatalogReceiveMessageService, IUserService userService, IUIServiceBus serviceBus)
+        public UiController(IOrderService orderService, IUserService userService, IUIServiceBus serviceBus)
         {
             this._orderService = orderService;
-            this._storeCatalogService = storeCatalogService;
-            this._storeCatalogReceiveMessageService = storeCatalogReceiveMessageService;
             this._userService = userService;
             this._serviceBus = serviceBus;
-
-            this.SubscribeStoreCatalog();
-            
-            //if not ready, id is null
-            STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
+            //this._storeCatalogReceiveMessageService = storeCatalogReceiveMessageService;
+            //this._userRetrievedReceiveMessageService = userRetrievedReceiveMessageService;
         }
 
         [HttpPost]
@@ -41,7 +34,8 @@ namespace GeekBurger.Ui.Api.Controllers
         {
             try
             {
-                await this._userService.PostUser(request.Face);
+                _userRetrievedReceiveMessageService.RequesterId = request.RequesterId;
+                await _userService.PostUser(request.Face);
                 return Ok();
             }
             catch (Exception ex)
@@ -83,11 +77,5 @@ namespace GeekBurger.Ui.Api.Controllers
             }
         }
 
-        #region [Private Methods]
-        private void SubscribeStoreCatalog()
-        {
-            //TO DO: Implementar fabrica de subscricao.
-        }
-        #endregion
     }
 }

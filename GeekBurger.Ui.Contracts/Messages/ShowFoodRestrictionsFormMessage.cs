@@ -1,8 +1,10 @@
-﻿namespace GeekBurger.Ui.Contracts.Messages
+﻿using System;
+
+namespace GeekBurger.Ui.Contracts.Messages
 {
     class ShowFoodRestrictionsFormMessage
     {
-        public int UserId { get; set; }
-        public int RequesterId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid RequesterId { get; set; }
     }
 }

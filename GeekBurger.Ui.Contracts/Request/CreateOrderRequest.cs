@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Contracts.Request
 {
@@ -7,18 +8,18 @@ namespace GeekBurger.Ui.Contracts.Request
         public CreateOrderRequest()
         {
             this.Products = new List<Product>();
-            this.ProductionIds = new List<int>();
+            this.ProductionIds = new List<Guid>();
         }
 
 
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public List<Product> Products { get; set; }
-        public List<int> ProductionIds { get; set; }
+        public List<Guid> ProductionIds { get; set; }
     }
 
     public class Product
     {
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public string Price { get; set; }
     }
 

@@ -18,16 +18,19 @@ namespace GeekBurger.Ui.Application.ServiceBus
         private readonly IOptions<ServiceBusOptions> _serviceBusOptions;
         private readonly ILogger _logger;
         private readonly IUIServiceBus _uiServiceBus;
+        private readonly IStoreCatalogService _storeCatalogService;
 
-        public override string _topic { get; set; }
-        public override string _subscription { get; set; }
+        public override string _topic { get; set; } = "StoreCatalogReady";
+        public override string _subscription { get; set; } = "UI";
+        private Guid? STORE_ID;
 
-        public StoreCatalogReceiveMessageService(IOptions<ServiceBusOptions> serviceBusOptions, ILogger logger, IUIServiceBus uiServiceBus)
+        public StoreCatalogReceiveMessageService(IOptions<ServiceBusOptions> serviceBusOptions, IStoreCatalogService storeCatalogService, ILogger logger, IUIServiceBus uiServiceBus)
             : base(serviceBusOptions, logger)
         {
             _serviceBusOptions = serviceBusOptions;
             _logger = logger;
             _uiServiceBus = uiServiceBus;
+            _storeCatalogService = storeCatalogService;
         }
 
         public override Task Handle(Message message, CancellationToken arg2)
@@ -41,11 +44,25 @@ namespace GeekBurger.Ui.Application.ServiceBus
 
             if (storeCatalogReady.Ready)
             {
+                STORE_ID = storeCatalogReady.StoreId;
                 _uiServiceBus.AddToMessageList(new ShowWelcomePageMessage(), "ShowWelcomePage");
                 _uiServiceBus.SendMessagesAsync();
             }
 
             return Task.CompletedTask;
+        }
+
+        public override void EnsureSubscriptionsIsCreated()
+        {
+            base.EnsureSubscriptionsIsCreated();
+
+            //if not ready, id is null
+            STORE_ID = this._storeCatalogService.GetStoreCatalog().Result;
+        }
+
+        public Guid GetStoreId()
+        {
+            return STORE_ID.Value;
         }
     }
 }

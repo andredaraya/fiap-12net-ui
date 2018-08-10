@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Contracts.Messages
 {
@@ -19,18 +20,18 @@ namespace GeekBurger.Ui.Contracts.Messages
             this.Items = new List<Item>();
         }
 
-        public int StoreId { get; set; }
-        public string ProductId { get; set; }
+        public Guid StoreId { get; set; }
+        public Guid ProductId { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
         public List<Item> Items { get; set; }
-        public int Price { get; set; }
-        public int RequesterId { get; set; }
+        public decimal Price { get; set; }
+        public Guid RequesterId { get; set; }
     }
 
     public class Item
     {
-        public int ItemId { get; set; }
+        public Guid ItemId { get; set; }
         public string Name { get; set; }
     }
 

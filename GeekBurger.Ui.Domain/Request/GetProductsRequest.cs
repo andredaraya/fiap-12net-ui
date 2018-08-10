@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Domain.Request
 {
@@ -9,7 +10,7 @@ namespace GeekBurger.Ui.Domain.Request
             this.Restrictions = new List<string>();
         }
         public string StoreName { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public List<string> Restrictions { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace GeekBurger.Ui.Application.ServiceBus
 
         public override string _subscription { get; set; }
         public override string _topic { get; set; }
+        public Guid RequesterId { get; set; }
 
         public UserRetrievedReceiveMessageService(IOptions<ServiceBusOptions> serviceBusOptions, ILogger logger, IUIServiceBus serviceBus)
             : base(serviceBusOptions, logger)
@@ -26,6 +28,8 @@ namespace GeekBurger.Ui.Application.ServiceBus
             _serviceBus = serviceBus;
             _serviceBusOptions = serviceBusOptions;
             _logger = logger;
+
+            RequesterId = Guid.NewGuid();
         }
 
         public override Task Handle(Message message, CancellationToken arg2)
@@ -39,11 +43,11 @@ namespace GeekBurger.Ui.Application.ServiceBus
 
             if (userRetrieved.AreRestrictionsSet)
             {
-
+                
             }
             else
             {
-                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = 1 }, "ShowWelcomePage");
+                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = RequesterId  }, "ShowWelcomePage");
                 _serviceBus.SendMessagesAsync();
             }
 

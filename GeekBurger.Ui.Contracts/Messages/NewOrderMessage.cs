@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeekBurger.Ui.Contracts.Messages
 {
@@ -10,7 +11,7 @@ namespace GeekBurger.Ui.Contracts.Messages
             this.ProductionIds = new List<int>();
         }
 
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public decimal Total { get; set; }
         public List<ProductMessage> Products { get; set; }
         public List<int> ProductionIds { get; set; }
@@ -18,7 +19,7 @@ namespace GeekBurger.Ui.Contracts.Messages
 
     public class ProductMessage
     {
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
     }
 
 }
