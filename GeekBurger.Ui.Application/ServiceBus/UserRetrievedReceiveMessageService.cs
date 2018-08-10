@@ -43,7 +43,7 @@ namespace GeekBurger.Ui.Application.ServiceBus
             {
                 GetProductsRequest request = new GetProductsRequest()
                 {
-                    StoreName = "Bla bla bla"
+                    StoreName = "Los Angeles - Pasadena"
                 };
 
                 var response = _storeCatalogService.GetProducts(request).Result;

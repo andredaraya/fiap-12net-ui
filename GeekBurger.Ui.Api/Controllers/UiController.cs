@@ -65,7 +65,9 @@ namespace GeekBurger.Ui.Api.Controllers
         {
             try
             {
-                var result = await this._orderService.CreateOrder();
+
+                _serviceBus.AddToMessageList(new NewOrderMessage() { }, "NewOrder");
+                _serviceBus.SendMessagesAsync();
                 return Ok("Order posted");
             }
             catch (Exception ex)
