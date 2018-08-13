@@ -49,12 +49,12 @@ namespace GeekBurger.Ui.Application.ServiceBus
                 var response = _storeCatalogService.GetProducts(request).Result;
 
                 _serviceBus.AddToMessageList(new ShowProductsListMessage() { Products = response.ConvertToMessageProduct(response.Products, this.RequesterId) }, "ShowProductsList");
-                _serviceBus.SendMessagesAsync();
+                _serviceBus.SendMessagesAsync("UICommand");
             }
             else
             {
-                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = this.RequesterId }, "ShowWelcomePage");
-                _serviceBus.SendMessagesAsync();
+                _serviceBus.AddToMessageList(new ShowFoodRestrictionsFormMessage() { UserId = userRetrieved.UserId, RequesterId = this.RequesterId }, "ShowFoodRestrictionsForm");
+                _serviceBus.SendMessagesAsync("UICommand");
             }
 
             return Task.CompletedTask;

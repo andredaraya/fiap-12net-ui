@@ -47,7 +47,7 @@ namespace GeekBurger.Ui.Application.ServiceBus
             {
                 STORE_ID = storeCatalogReady.StoreId;
                 _uiServiceBus.AddToMessageList(new ShowWelcomePageMessage(), "ShowWelcomePage");
-                _uiServiceBus.SendMessagesAsync();
+                _uiServiceBus.SendMessagesAsync("UICommand");
             }
 
             return Task.CompletedTask;

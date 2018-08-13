@@ -8,4 +8,8 @@
     <ProjectReference Include="..\GeekBurger.Ui.Contracts\GeekBurger.Ui.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
 </Project>

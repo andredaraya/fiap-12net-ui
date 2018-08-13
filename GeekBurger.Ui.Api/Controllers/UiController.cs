@@ -61,13 +61,12 @@ namespace GeekBurger.Ui.Api.Controllers
 
         [HttpPost]
         [Route("order")]
-        public async Task<IActionResult> PostOrder([FromBody]CreateOrderRequest request, CancellationToken cancellationToken)
+        public IActionResult PostOrder([FromBody]CreateOrderRequest request, CancellationToken cancellationToken)
         {
             try
-            {
-
-                _serviceBus.AddToMessageList(new NewOrderMessage() { }, "NewOrder");
-                _serviceBus.SendMessagesAsync();
+            {                
+                _serviceBus.AddToMessageList(request.ConvertToNewOrderMessage(), "8048e9ec-80fe-4bad-bc2a-e4f4a75c834e");
+                _serviceBus.SendMessagesAsync("NewOrder");
                 return Ok("Order posted");
             }
             catch (Exception ex)

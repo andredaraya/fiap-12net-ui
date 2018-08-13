@@ -7,4 +7,9 @@
     <Version>1.2.0</Version>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GeekBurger.Orders.Contract" Version="2.2.0" />
+    <PackageReference Include="GeekBurger.StoreCatalog.Contract" Version="1.0.4" />
+  </ItemGroup>
+
 </Project>
